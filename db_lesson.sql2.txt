@@ -17,13 +17,14 @@ Current database: db_lesson2
 +--------------------+
 7 rows in set (0.066 sec)
 
-MariaDB [db_lesson2]> CREATE TABLE `departments`(
-    -> department_id int unsigned auto_increment primary key NOT NULL,
-    -> name VARCHAR(20) NOT NULL,
-    -> created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    -> updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-    -> );
-Query OK, 0 rows affected (0.067 sec)
+Q1:
+CREATE TABLE 
+   `departments`(
+     -> department_id int unsigned auto_increment primary key NOT NULL,
+     -> name VARCHAR(20) NOT NULL,
+     -> created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     -> updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+     -> );
 
 MariaDB [db_lesson2]> DESC departments;
 +---------------+------------------+------+-----+---------------------+-------------------------------+
