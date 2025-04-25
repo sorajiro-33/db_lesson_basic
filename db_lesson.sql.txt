@@ -1,0 +1,290 @@
+MariaDB [db_lesson2]> SHOW DATABASES;
+ERROR 2006 (HY000): MySQL server has gone away
+No connection. Trying to reconnect...
+Connection id:    9
+Current database: db_lesson2
+
++--------------------+
+| Database           |
++--------------------+
+| db_lesson          |
+| db_lesson2         |
+| information_schema |
+| mysql              |
+| performance_schema |
+| phpmyadmin         |
+| test               |
++--------------------+
+7 rows in set (0.066 sec)
+
+MariaDB [db_lesson2]> CREATE TABLE `departments`(
+    -> department_id int unsigned auto_increment primary key NOT NULL,
+    -> name VARCHAR(20) NOT NULL,
+    -> created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    -> updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    -> );
+Query OK, 0 rows affected (0.067 sec)
+
+MariaDB [db_lesson2]> DESC departments;
++---------------+------------------+------+-----+---------------------+-------------------------------+
+| Field         | Type             | Null | Key | Default             | Extra                         |
++---------------+------------------+------+-----+---------------------+-------------------------------+
+| department_id | int(10) unsigned | NO   | PRI | NULL                | auto_increment                |
+| name          | varchar(20)      | NO   |     | NULL                |                               |
+| created_at    | timestamp        | NO   |     | current_timestamp() |                               |
+| updated_at    | timestamp        | NO   |     | current_timestamp() | on update current_timestamp() |
++---------------+------------------+------+-----+---------------------+-------------------------------+
+4 rows in set (0.031 sec)
+
+MariaDB [db_lesson2]> ALTER TABLE people ADD COLUMN department_id INT unsigned AFTER email;
+Query OK, 0 rows affected (0.032 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [db_lesson2]> DESC people;
++---------------+---------------------+------+-----+---------------------+-------------------------------+
+| Field         | Type                | Null | Key | Default             | Extra                         |
++---------------+---------------------+------+-----+---------------------+-------------------------------+
+| person_id     | int(10) unsigned    | NO   | PRI | NULL                | auto_increment                |
+| name          | varchar(20)         | NO   |     | NULL                |                               |
+| email         | varchar(255)        | YES  | UNI | NULL                |                               |
+| department_id | int(10) unsigned    | YES  |     | NULL                |                               |
+| age           | tinyint(3) unsigned | YES  |     | NULL                |                               |
+| gender        | tinyint(4)          | YES  |     | NULL                |                               |
+| created_at    | timestamp           | NO   |     | current_timestamp() |                               |
+| updated_at    | timestamp           | NO   |     | current_timestamp() | on update current_timestamp() |
++---------------+---------------------+------+-----+---------------------+-------------------------------+
+8 rows in set (0.010 sec)
+
+MariaDB [db_lesson2]> INSERT INTO departments (name)
+    -> VALUES
+    -> ('営業'),
+    -> ('開発'),
+    -> ('経理'),
+    -> ('人事'),
+    -> ('情報システム');
+Query OK, 5 rows affected (0.016 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+MariaDB [db_lesson2]> DESC reports;
++------------+------------------+------+-----+---------------------+-------------------------------+
+| Field      | Type             | Null | Key | Default             | Extra                         |
++------------+------------------+------+-----+---------------------+-------------------------------+
+| report_id  | int(10) unsigned | NO   | PRI | NULL                | auto_increment                |
+| person_id  | int(10) unsigned | NO   |     | NULL                |                               |
+| content    | text             | NO   |     | NULL                |                               |
+| created_at | timestamp        | NO   |     | current_timestamp() |                               |
+| updated_at | timestamp        | NO   |     | current_timestamp() | on update current_timestamp() |
++------------+------------------+------+-----+---------------------+-------------------------------+
+5 rows in set (0.016 sec)
+
+MariaDB [db_lesson2]>  INSERT INTO reports (person_id, content)
+    -> VALUES
+    -> (1, 'ああああああああああ'),
+    -> (1, 'ええええええええええええええ'),
+    -> (1, 'そそそそそそそそそそそ'),
+    -> (2, 'にこにこにこにこにこにこ'),
+    -> (3, 'ままままっまっままままままっまっま'),
+    -> (3, 'おやおやおやおやおやおやおやおやおや'),
+    -> (4, 'だだだだだだだだだだだだ'),
+    -> (4, 'すすすすすすすすすすすすすす'),
+    -> (4, 'ふふふふふふふふふふふふうふふ'),
+    -> (6, 'ここここおこここおここここここここ');
+Query OK, 10 rows affected (0.009 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+ALTER TABLE people MODIFY department_id INT unsigned COMMENT '1が営業、2が開発、3が経理、4が人事、5が情報システム';
+Query OK, 0 rows affected (0.006 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [db_lesson2]>  INSERT INTO people (name, email, age, gender,department_id)
+    -> VALUES
+    -> ('小林拓郎', 'kobayashi@beyond-works.co.jp', 33, 1, 1),
+    -> ('佐川美琴', 'sagawa@beyond-works.co.jp', 56, 2, 1),
+    -> ('井野辺ゆう', 'inobe@beyond-works.co.jp', 26, 2, 1),
+    -> ('田上司', 'tagami@beyond-works.co.jp', 45, 1, 2),
+    -> ('柿原裕二', 'kakihara@beyond-works.co.jp', 61, 1, 2),
+    -> ('早乙女朱里', 'saotome@beyond-works.co.jp', 33, 2, 2),
+    -> ('河野すず', 'kawano@beyond-works.co.jp', 37, 2, 2),
+    -> ('榎本恵理', 'enomoto@beyond-works.co.jp', 42, 2, 3),
+    -> ('岡部剛', 'okabe@beyond-works.co.jp', 25, 1, 4),
+    -> ('畠山重幸', 'hatakeyama@beyond-works.co.jp', 38, 1, 5);
+Query OK, 10 rows affected (0.015 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+MariaDB [db_lesson2]> SELECT * FROM people;
++-----------+----------------+-------------------------------+---------------+------+--------+---------------------+---------------------+
+| person_id | name           | email                         | department_id | age  | gender | created_at          | updated_at          |
++-----------+----------------+-------------------------------+---------------+------+--------+---------------------+---------------------+
+|         1 | 鈴木たかし     | suzuki@beyond-works.co.jp     |          NULL |   20 |      1 | 2025-04-21 10:55:55 | 2025-04-21 10:55:55 |
+|         2 | 田中ゆうこ     | tanaka@beyond-works.co.jp     |          NULL |   25 |      2 | 2025-04-21 10:56:35 | 2025-04-21 10:56:35 |
+|         3 | 福田だいすけ   | fukuda@beyond-works.co.jp     |          NULL |   42 |      1 | 2025-04-21 10:56:35 | 2025-04-21 10:56:35 |
+|         4 | 豊島はなこ     | toyoshima@beyond-works.co.jp  |          NULL |   34 |      2 | 2025-04-21 10:56:35 | 2025-04-21 10:56:35 |
+|         6 | 不思議沢みちこ | NULL                          |          NULL | NULL |   NULL | 2025-04-21 10:56:35 | 2025-04-21 10:56:35 |
+|        20 | 小林拓郎       | kobayashi@beyond-works.co.jp  |             1 |   33 |      1 | 2025-04-23 18:51:56 | 2025-04-23 18:51:56 |
+|        21 | 佐川美琴       | sagawa@beyond-works.co.jp     |             1 |   56 |      2 | 2025-04-23 18:51:56 | 2025-04-23 18:51:56 |
+|        22 | 井野辺ゆう     | inobe@beyond-works.co.jp      |             1 |   26 |      2 | 2025-04-23 18:51:56 | 2025-04-23 18:51:56 |
+|        23 | 田上司         | tagami@beyond-works.co.jp     |             2 |   45 |      1 | 2025-04-23 18:51:56 | 2025-04-23 18:51:56 |
+|        24 | 柿原裕二       | kakihara@beyond-works.co.jp   |             2 |   61 |      1 | 2025-04-23 18:51:56 | 2025-04-23 18:51:56 |
+|        25 | 早乙女朱里     | saotome@beyond-works.co.jp    |             2 |   33 |      2 | 2025-04-23 18:51:56 | 2025-04-23 18:51:56 |
+|        26 | 河野すず       | kawano@beyond-works.co.jp     |             2 |   37 |      2 | 2025-04-23 18:51:56 | 2025-04-23 18:51:56 |
+|        27 | 榎本恵理       | enomoto@beyond-works.co.jp    |             3 |   42 |      2 | 2025-04-23 18:51:56 | 2025-04-23 18:51:56 |
+|        28 | 岡部剛         | okabe@beyond-works.co.jp      |             4 |   25 |      1 | 2025-04-23 18:51:56 | 2025-04-23 18:51:56 |
+|        29 | 畠山重幸       | hatakeyama@beyond-works.co.jp |             5 |   38 |      1 | 2025-04-23 18:51:56 | 2025-04-23 18:51:56 |
++-----------+----------------+-------------------------------+---------------+------+--------+---------------------+---------------------+
+15 rows in set (0.001 sec)
+
+MariaDB [db_lesson2]> UPDATE people SET department_id = 1 WHERE person_id = '1';
+Query OK, 1 row affected (0.014 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [db_lesson2]> UPDATE people SET department_id = 2 WHERE person_id = '2';
+Query OK, 1 row affected (0.015 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [db_lesson2]> UPDATE people SET department_id = 3 WHERE person_id = '3';
+Query OK, 1 row affected (0.014 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [db_lesson2]> UPDATE people SET department_id = 4 WHERE person_id = '4';
+Query OK, 1 row affected (0.004 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [db_lesson2]> UPDATE people SET department_id = 5 WHERE person_id = '6';
+Query OK, 1 row affected (0.007 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [db_lesson2]> SELECT name, age FROM people WHERE gender = '1' ORDER BY age DESC;
++--------------+------+
+| name         | age  |
++--------------+------+
+| 柿原裕二     |   61 |
+| 田上司       |   45 |
+| 福田だいすけ |   42 |
+| 畠山重幸     |   38 |
+| 小林拓郎     |   33 |
+| 岡部剛       |   25 |
+| 鈴木たかし   |   20 |
++--------------+------+
+7 rows in set (0.037 sec)
+
+
+テーブル・レコード・カラムという3つの単語を適切に使用して、下記のSQL文を日本語で説明してください。
+
+SELECT
+  `name`, `email`, `age`
+FROM
+  `people`
+WHERE
+  `department_id` = 1
+ORDER BY
+  `created_at`;
+
+peopleテーブルから部署IDカラムが1に該当する、名前、メールアドレス、年齢のレコードを作成日時の昇順で抽出する
+
+MariaDB [db_lesson2]> SELECT name FROM people WHERE gender = 2 AND age BETWEEN 20 and 29 OR gender = 1 AND age BETWEEN 40 and 49;
++--------------+
+| name         |
++--------------+
+| 田中ゆうこ   |
+| 福田だいすけ |
+| 井野辺ゆう   |
+| 田上司       |
++--------------+
+4 rows in set (0.003 sec)
+
+MariaDB [db_lesson2]> SELECT * FROM people WHERE department_id = 1 ORDER BY age ASC;
++-----------+------------+------------------------------+---------------+------+--------+---------------------+---------------------+
+| person_id | name       | email                        | department_id | age  | gender | created_at          | updated_at          |
++-----------+------------+------------------------------+---------------+------+--------+---------------------+---------------------+
+|         1 | 鈴木たかし | suzuki@beyond-works.co.jp    |             1 |   20 |      1 | 2025-04-21 10:55:55 | 2025-04-23 18:57:17 |
+|        22 | 井野辺ゆう | inobe@beyond-works.co.jp     |             1 |   26 |      2 | 2025-04-23 18:51:56 | 2025-04-23 18:51:56 |
+|        20 | 小林拓郎   | kobayashi@beyond-works.co.jp |             1 |   33 |      1 | 2025-04-23 18:51:56 | 2025-04-23 18:51:56 |
+|        21 | 佐川美琴   | sagawa@beyond-works.co.jp    |             1 |   56 |      2 | 2025-04-23 18:51:56 | 2025-04-23 18:51:56 |
++-----------+------------+------------------------------+---------------+------+--------+---------------------+---------------------+
+4 rows in set (0.003 sec)
+
+MariaDB [db_lesson2]> SELECT AVG(age) AS average_age FROM people WHERE gender = 2 AND department_id = 2;
++-------------+
+| average_age |
++-------------+
+|     31.6667 |
++-------------+
+1 row in set (0.007 sec)
+
+MariaDB [db_lesson2]> SELECT people.name, departments.name, reports.content FROM people
+    ->  INNER JOIN reports ON people.person_id = reports.person_id
+    -> INNER JOIN departments ON people.department_id = departments.department_id;
++----------------+--------------+--------------------------------------+
+| name           | name         | content                              |
++----------------+--------------+--------------------------------------+
+| 鈴木たかし     | 営業         |                                      |
+| 鈴木たかし     | 営業         |                                      |
+| 鈴木たかし     | 営業         |                                      |
+| 鈴木たかし     | 営業         | ああああああああああ                 |
+| 鈴木たかし     | 営業         | ええええええええええええええ         |
+| 鈴木たかし     | 営業         | そそそそそそそそそそそ               |
+| 田中ゆうこ     | 開発         |                                      |
+| 田中ゆうこ     | 開発         |                                      |
+| 田中ゆうこ     | 開発         |                                      |
+| 田中ゆうこ     | 開発         | にこにこにこにこにこにこ             |
+| 福田だいすけ   | 経理         |                                      |
+| 福田だいすけ   | 経理         |                                      |
+| 福田だいすけ   | 経理         | ままままっまっままままままっまっま   |
+| 福田だいすけ   | 経理         | おやおやおやおやおやおやおやおやおや |
+| 豊島はなこ     | 人事         | だだだだだだだだだだだだ             |
+| 豊島はなこ     | 人事         | すすすすすすすすすすすすすす         |
+| 豊島はなこ     | 人事         | ふふふふふふふふふふふふうふふ       |
+| 不思議沢みちこ | 情報システム |                                      |
+| 不思議沢みちこ | 情報システム |                                      |
+| 不思議沢みちこ | 情報システム |                                      |
+| 不思議沢みちこ | 情報システム | ここここおこここおここここここここ   |
++----------------+--------------+--------------------------------------+
+21 rows in set (0.028 sec)
+
+
+MariaDB [db_lesson2]> SELECT people.name, departments.name, reports.content FROM people
+    -> INNER JOIN reports ON people.person_id = reports.person_id
+    -> INNER JOIN departments ON people.department_id = departments.department_id;
++----------------+--------------+--------------------------------------+
+| name           | name         | content                              |
++----------------+--------------+--------------------------------------+
+| 鈴木たかし     | 営業         | ひひひひいひひひひひひひひひ         |
+| 鈴木たかし     | 営業         | ひひひひいひひひひひひひひhu         |
+| 鈴木たかし     | 営業         | ひひひひいひwsgひひrirheturddo       |
+| 鈴木たかし     | 営業         | ああああああああああ                 |
+| 鈴木たかし     | 営業         | ええええええええええええええ         |
+| 鈴木たかし     | 営業         | そそそそそそそそそそそ               |
+| 田中ゆうこ     | 開発         | ひひひひいひひひひひひひひji         |
+| 田中ゆうこ     | 開発         | ひひひひいひひひひひひrtuko          |
+| 田中ゆうこ     | 開発         | ひひひひいひひひひひrirhetuko        |
+| 田中ゆうこ     | 開発         | にこにこにこにこにこにこ             |
+| 福田だいすけ   | 経理         | ひひひひいひひひひひひひひko         |
+| 福田だいすけ   | 経理         | ひひひひいひひひひひrirheturddo      |
+| 福田だいすけ   | 経理         | ままままっまっままままままっまっま   |
+| 福田だいすけ   | 経理         | おやおやおやおやおやおやおやおやおや |
+| 豊島はなこ     | 人事         | だだだだだだだだだだだだ             |
+| 豊島はなこ     | 人事         | すすすすすすすすすすすすすす         |
+| 豊島はなこ     | 人事         | ふふふふふふふふふふふふうふふ       |
+| 不思議沢みちこ | 情報システム | ひひひひいひひひひひひひtuko         |
+| 不思議沢みちこ | 情報システム | ひひひひいひひひひひretetuko         |
+| 不思議沢みちこ | 情報システム | ひひひひいひひひひひrirhetuledo      |
+| 不思議沢みちこ | 情報システム | ここここおこここおここここここここ   |
++----------------+--------------+--------------------------------------+
+21 rows in set (0.017 sec)
+
+MariaDB [db_lesson2]> SELECT people.name FROM people LEFT OUTER JOIN reports USING (person_id)  WHERE reports.content IS NULL;
++------------+
+| name       |
++------------+
+| 小林拓郎   |
+| 佐川美琴   |
+| 井野辺ゆう |
+| 田上司     |
+| 柿原裕二   |
+| 早乙女朱里 |
+| 河野すず   |
+| 榎本恵理   |
+| 岡部剛     |
+| 畠山重幸   |
++------------+
+10 rows in set (0.002 sec)
